@@ -3,10 +3,8 @@ import sys
 import concurrent.futures
 import pyfiglet
 
-host_IP = ""
 
-
-def tcp_scanner(port):
+def tcp_scanner(host_IP, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     socket.setdefaulttimeout(1)
     try:
@@ -36,10 +34,11 @@ def read_host_IP():
 
 if __name__ == "__main__":
     pyfiglet.print_figlet("PORTSCANNER", font="slant")
+    print(sys.argv)
     host_IP = read_host_IP()
     print(f"Starting scan of {host_IP}...")
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        for port in range(65536):
-            executor.submit(tcp_scanner, port)
+        for port in range(65536):  # Hosts have 65535 ports
+            executor.submit(tcp_scanner, host_IP, port)
     print(f"Finished scan of {host_IP}!")
