@@ -1,6 +1,7 @@
 import socket
 import sys
 import concurrent.futures
+import pyfiglet
 
 host_IP = ""
 
@@ -34,6 +35,7 @@ def read_host_IP():
 
 
 if __name__ == "__main__":
+    pyfiglet.print_figlet("PORTSCANNER", font="slant")
     host_IP = read_host_IP()
     print(f"Starting scan of {host_IP}...")
 
