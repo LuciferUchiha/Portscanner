@@ -15,7 +15,7 @@ def scan_tcp(host_IP, port):
         sock.close()
 
     except socket.error:
-        print(f"Could not connect to host {host_IP}")
+        print(f"Could not connect to host '{host_IP}'")
         sys.exit()
     except KeyboardInterrupt:
         print("Exiting...")
@@ -26,7 +26,7 @@ def host(host):
     try:
         host_IP = socket.gethostbyname(host)
     except socket.gaierror:
-        raise argparse.ArgumentTypeError(f"Host {host} could not be resolved.")
+        raise argparse.ArgumentTypeError(f"Host '{host}' could not be resolved.")
     return host_IP
 
 
