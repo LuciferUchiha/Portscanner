@@ -42,7 +42,6 @@ def scan_tcp(port):
     try:
         result = sock.connect_ex((host_IP, port))
         if result == 0:
-            # print(f"Port {port} is OPEN")
             return port
         sock.close()
 
@@ -52,6 +51,7 @@ def scan_tcp(port):
     except KeyboardInterrupt:
         print("Exiting...")
         sys.exit()
+    return None
 
 
 def print_open_ports(results):
