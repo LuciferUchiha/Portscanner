@@ -21,7 +21,7 @@ This portscanner hast multithreading and has a progressbar to track how much of 
 Port Scanning is actively looking for open ports on a host or system to then possibly use for a exploit or attack on that system.
 [More on portscanners](https://en.wikipedia.org/wiki/Port_scanner)
 
-##Usage
+## Usage
 ```
 usage: portscanner.py [-h] [-s STARTPORT] [-e ENDPORT] host
 
