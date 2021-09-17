@@ -5,53 +5,54 @@ import concurrent.futures
 import pyfiglet
 from tqdm import tqdm
 
-ports = []
-host_IP = ""
+host_IP = None
 
 
 def resolve_args():
     argv = sys.argv[1:]
     parser = argparse.ArgumentParser()
-    parser.add_argument("host", type=host, help="Hostname or IP of host system to be scanned")
-    parser.add_argument("-s", "--startPort", type=port, default=0, help="Port number to start scan (0-65535)")
-    parser.add_argument("-e", "--endPort", type=port, default=65535, help="Port number to end scan (0-65535)")
+    parser.add_argument("host", type=_host, help="Hostname or IP of host system to be scanned")
+    parser.add_argument("-s", "--startPort", type=_port, default=0, help="Port number to start scan (0-65535)")
+    parser.add_argument("-e", "--endPort", type=_port, default=65535, help="Port number to end scan (0-65535)")
     return vars(parser.parse_args(argv))
 
 
-def host(s):
+def _host(s):
     try:
-        host_IP = socket.gethostbyname(s)
+        value = socket.gethostbyname(s)
     except socket.gaierror:
         raise argparse.ArgumentTypeError(f"Host '{s}' could not be resolved.")
-    return host_IP
+    return value
 
 
-def port(s):
+def _port(s):
     try:
-        port = int(s)
+        value = int(s)
     except ValueError:
         raise argparse.ArgumentTypeError(f"Expected integer got '{s}'")
-    if port > 65535 or port < 0:
+    if 0 > value > 65535:
         raise argparse.ArgumentTypeError(f"Port number must be 0-65535, got {port}")
-    return port
+    return value
 
 
 def scan_tcp(port):
+    global host_IP
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     socket.setdefaulttimeout(1)
+    result = 0
     try:
-        result = sock.connect_ex((host_IP, port))
-        if result == 0:
-            return port
+        answer = sock.connect_ex((host_IP, port))
+        if answer == 0:
+            result = port
         sock.close()
-
     except socket.error:
         print(f"Could not connect to host '{host_IP}'")
         sys.exit()
     except KeyboardInterrupt:
         print("Exiting...")
         sys.exit()
-    return None
+
+    return result
 
 
 def print_open_ports(results):
@@ -63,6 +64,7 @@ def print_open_ports(results):
 def main():
     args = resolve_args()
     pyfiglet.print_figlet("PORTSCANNER", font="slant")
+    global host_IP
     host_IP = args.get("host")
     ports = range(args.get("startPort"), args.get("endPort") + 1)
     print(f"Starting scan of {host_IP}...")
