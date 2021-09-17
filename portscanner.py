@@ -31,7 +31,7 @@ def _port(s):
     except ValueError:
         raise argparse.ArgumentTypeError(f"Expected integer got '{s}'")
     if 0 > value > 65535:
-        raise argparse.ArgumentTypeError(f"Port number must be 0-65535, got {port}")
+        raise argparse.ArgumentTypeError(f"Port number must be 0-65535, got {s}")
     return value
 
 
